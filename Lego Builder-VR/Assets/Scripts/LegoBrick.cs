@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using static LegoBrick;
 
 public class LegoBrick : MonoBehaviour
 {
     [System.Serializable]
-    public enum BrickType
+    public enum BrickType:int
     {
         B1x1,
         B1x2,
@@ -20,6 +21,8 @@ public class LegoBrick : MonoBehaviour
         B2x6,
         B2x8,
     }
+
+    public BrickType type { get; private set; } = BrickType.B1x1;
 
     [System.Serializable]
     public enum BrickColor
@@ -36,6 +39,33 @@ public class LegoBrick : MonoBehaviour
         Lime
     }
 
+    public BrickColor color { get; private set; } = BrickColor.LightGray;
+
+    private Vector3Int[] typeToCells = new Vector3Int[]{
+        new Vector3Int(1,1,1),
+        new Vector3Int(2,1,1),
+        new Vector3Int(3,1,1),
+        new Vector3Int(4,1,1),
+        new Vector3Int(6,1,1),
+        new Vector3Int(8,1,1),
+        new Vector3Int(2,1,2),
+        new Vector3Int(3,1,2),
+        new Vector3Int(4,1,2),
+        new Vector3Int(6,1,2),
+        new Vector3Int(8,1,2),
+    };
+
+    public Vector3Int CellUnitDimensions
+    {
+        get => typeToCells[(int)type];
+    }
+
+    public Vector3 Dimensions
+    {
+        get => Vector3.Scale(BuildArea.cellDimensions, CellUnitDimensions);
+    }
+
+
     public static GameObject Create(BrickType type, BrickColor color)
     {
         GameObject go = Instantiate(Resources.Load(BrickTypeToPrefabPath(type)) as GameObject);
@@ -45,6 +75,11 @@ public class LegoBrick : MonoBehaviour
         {
             rend.material = BrickColorToMaterial(color);
         }
+
+        LegoBrick brick = go.GetOrAddComponent<LegoBrick>();
+
+        brick.color = color;
+        brick.type = type;
 
         return go;
     }
@@ -63,5 +98,6 @@ public class LegoBrick : MonoBehaviour
 
         return $"Prefabs/Bricks/{brickType}_Brick";
     }
+
    
 }
