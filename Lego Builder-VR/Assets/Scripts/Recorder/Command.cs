@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class Command
 {
     public enum CommandType
@@ -11,15 +12,17 @@ public class Command
         MoveHand
     }
 
+    public LegoBrick.BrickColor brickColor;
+    public LegoBrick.BrickType brickType;
+   
     public int blockID;
-    public string brickType = "";
     public List<AnimationFrame> frames;
 }
 
-
+[System.Serializable]
 public class AnimationFrame
 {
-    public Vector3 position;
-    public Quaternion rotation;
-    public float timestamp;
+    public Vector3 position = Vector3.zero;
+    public Quaternion rotation = Quaternion.identity;
+    public float timestamp = 0f;
 }
