@@ -24,14 +24,15 @@ public class clickHandler : MonoBehaviour, IPointerClickHandler
     public void OnPointerClick(PointerEventData eventData)
     {
         Debug.Log("Card " + prefabId + " clicked!");
-        SceneManager.LoadScene("BuildingScene", LoadSceneMode.Single);
+        SceneManager.LoadScene("BuildingScene", LoadSceneMode.Additive);
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     public void ChangeScene()
     {
         Debug.Log("Card " + prefabId + " clicked!");
-        SceneManager.LoadScene("BuildingScene", LoadSceneMode.Single);
+        SceneManager.UnloadSceneAsync("Menu");
+        SceneManager.LoadScene("BuildingScene", LoadSceneMode.Additive);
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
