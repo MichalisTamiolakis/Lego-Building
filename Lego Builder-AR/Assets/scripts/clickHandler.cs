@@ -28,6 +28,13 @@ public class clickHandler : MonoBehaviour, IPointerClickHandler
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
+    public void ChangeScene()
+    {
+        Debug.Log("Card " + prefabId + " clicked!");
+        SceneManager.LoadScene("BuildingScene", LoadSceneMode.Single);
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
