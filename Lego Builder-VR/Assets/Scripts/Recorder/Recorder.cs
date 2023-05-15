@@ -21,7 +21,8 @@ public class Recorder : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        GameObject go = LegoBrick.Create(LegoBrick.BrickType.B2x2, LegoBrick.BrickColor.Blue);
+
     }
 
     // Update is called once per frame

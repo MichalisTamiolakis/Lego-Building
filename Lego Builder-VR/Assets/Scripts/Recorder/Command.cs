@@ -2,9 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Movement
+public class Command
 {
+    public enum CommandType
+    {
+        RequireBrick,
+        MoveBrick,
+        MoveHand
+    }
+
     public int blockID;
+    public string brickType = "";
     public List<AnimationFrame> frames;
 }
 
