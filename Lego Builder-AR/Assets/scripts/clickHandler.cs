@@ -9,11 +9,13 @@ public class clickHandler : MonoBehaviour
 {
     public GameObject canvas;
     public int prefabId ;
+    //public Controller controller;
+    public static Controller controller = new Controller();
     //public sceneNam
     // Start is called before the first frame update
     void Start()
     {
-        
+        //controller = new Controller();
     }
 
     // Update is called once per frame
@@ -37,6 +39,18 @@ public class clickHandler : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
+    public void ShowNextCommand()
+    {
+        //Controller controller = new Controller();
+        controller.IncreaseStep();
+    }
+
+    public void ShowPrevCommand()
+    {
+        //Controller controller = new Controller();
+        controller.DecreaseStep();
+    }
+
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
@@ -44,4 +58,5 @@ public class clickHandler : MonoBehaviour
         //Debug.Log("Debug: " + SceneManager.GetActiveScene().GetRootGameObjects());
         //SceneManager.GetActiveScene().GetRootGameObjects()[0].GetComponent<LoadModel>().SetPrefabId(prefabId);
     }
+
 }
