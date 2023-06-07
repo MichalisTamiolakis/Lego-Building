@@ -139,6 +139,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d28bfde89b67e9f44aefb3ddcdcfa9d8,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d28bfde89b67e9f44aefb3ddcdcfa9d8,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.8
       objectReference: {fileID: 0}
@@ -202,6 +207,16 @@ PrefabInstance:
       propertyPath: m_TagString
       value: BuildArea
       objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: d28bfde89b67e9f44aefb3ddcdcfa9d8,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: d28bfde89b67e9f44aefb3ddcdcfa9d8,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d28bfde89b67e9f44aefb3ddcdcfa9d8, type: 3}
 --- !u!1 &119815546 stripped
@@ -229,6 +244,19 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 119815545}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &119815552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 119815546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdc8278a81555f842a1cc27b4de2c67e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildArea: {fileID: 1198254876}
 --- !u!1 &227180386
 GameObject:
   m_ObjectHideFlags: 0
@@ -464,7 +492,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 254276429}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca162d3347653ec4783956dde09647ae, type: 3}
   m_Name: 
@@ -960,9 +988,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21db8f5176c8fc84e8aec7fa1c61ff2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gizmos: 1
-  numberCells: {x: 10, y: 10, z: 10}
-  cellDimensions: {x: 0.032, y: 0.0384, z: 0.032}
+  brick: {fileID: 0}
+  gizmos: 0
+  numberCells: {x: 48, y: 20, z: 48}
 --- !u!1 &1251748477
 GameObject:
   m_ObjectHideFlags: 0
@@ -2342,6 +2370,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: XR Rig
+      objectReference: {fileID: 0}
+    - target: {fileID: 8633888185112238606, guid: ec44234f3226245448ef5c27400ff76e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ec44234f3226245448ef5c27400ff76e, type: 3}
