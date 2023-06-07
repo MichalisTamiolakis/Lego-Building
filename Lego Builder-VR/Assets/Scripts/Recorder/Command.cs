@@ -9,6 +9,8 @@ public class Command
     {
         this.type = type;
         this.blockID = blockID;
+        this.brickColor = brickColor;
+        this.brickType = brickType;
     }
 
     public Command(CommandType type, int blockID, List<AnimationFrame> frames)

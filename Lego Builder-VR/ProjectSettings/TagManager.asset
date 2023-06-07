@@ -9,11 +9,11 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Bricks
   - Water
   - UI
-  - 
-  - 
+  - UnplacedBricks
+  - Holograms
   - 
   - 
   - 
