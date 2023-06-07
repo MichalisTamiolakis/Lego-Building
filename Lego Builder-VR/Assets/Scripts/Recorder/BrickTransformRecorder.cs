@@ -31,7 +31,7 @@ public class BrickTransformRecorder : MonoBehaviour
         isRecording = false;
     }
 
-    private void AddCurrentTransformFrame(float frameTime)
+    public void AddCurrentTransformFrame(float frameTime)
     {
         frames.Add(new AnimationFrame(PositionToBuildAreaLocal(), RotationToBuildAreaLocal(), frameTime));
     }
