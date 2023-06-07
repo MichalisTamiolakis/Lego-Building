@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
 using System.IO;
+using UnityEngine.UI;
+using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
 public class Controller : MonoBehaviour
 {
@@ -13,6 +15,8 @@ public class Controller : MonoBehaviour
     public static GameObject instantiatedPopup = null;
     public GameObject popup;
     GameObject movingBrick = null;
+    public Button nextButton;
+    public Button previousButton;
     // Start is called before the first frame update
 
     private void Awake()
@@ -34,8 +38,9 @@ public class Controller : MonoBehaviour
         string path = Application.dataPath + "/json/TestRecording.json";
 
         string jsonString = File.ReadAllText(path);
-
+        //nextButton = GetComponent<Button>();
         r = Recording.FromJson(jsonString);
+        UpdateButtonInteractivity();
         DisplayCommand(GetCurrentCommand());
     }
 
@@ -47,12 +52,15 @@ public class Controller : MonoBehaviour
     public Command GetNextCommand()
     {
         step++;
+        Debug.Log("Step: " + step + ", Length: " + r.commands.Count);
+        UpdateButtonInteractivity();
         return r.commands[step];
     }
 
     public Command GetPreviousCommand()
     {
         step--;
+        UpdateButtonInteractivity();
         return r.commands[step];
     }
 
@@ -64,6 +72,28 @@ public class Controller : MonoBehaviour
     public void DecreaseStep()
     {
         DisplayCommand(GetPreviousCommand());
+    }
+
+    private void UpdateButtonInteractivity()
+    {
+        Debug.Log("Step: " + step + ", Length: " + r.commands.Count);
+        if (step >= r.commands.Count-1)
+        {
+            nextButton.interactable = false; // Disable the button
+        }
+        else
+        {
+            nextButton.interactable = true; // Enable the button
+        }
+
+        if(step == 0) // If we are at the first step
+        {
+            previousButton.interactable = false; // Disable the button
+        }
+        else
+        {
+            previousButton.interactable = true; // Enable the button
+        }
     }
 
 

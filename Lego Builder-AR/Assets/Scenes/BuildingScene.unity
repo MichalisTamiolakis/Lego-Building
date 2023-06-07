@@ -1583,6 +1583,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   step: 0
   popup: {fileID: 8763721510388289374, guid: a6508068f2859b14789dffd4cb1005bc, type: 3}
+  nextButton: {fileID: 1653312277}
+  previousButton: {fileID: 262720408881452207}
 --- !u!4 &2080799290
 Transform:
   m_ObjectHideFlags: 0
