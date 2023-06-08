@@ -28,11 +28,6 @@ public class Recorder : MonoBehaviour
         CreateNewRecording("TestRecording");
     }
 
-    void Update()
-    {
-        
-    }
-
     void CreateNewRecording(string name)
     {
         recording = new Recording(name);

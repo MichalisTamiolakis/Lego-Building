@@ -27,7 +27,6 @@ public class BrickRecordingTriggers:MonoBehaviour
         int brickID = Recorder.Instance.recording.GenerateBrickID();
         Recorder.Instance.recording.AddCommand(Command.CreateRequireBrickCommand(brickID, brick));
         Recorder.Instance.recording.AddCommand(new Command(Command.CommandType.MoveBrick, brickID, recorder.frames));
-        //Debug.Log($"Saved {recorder.frames.Count} frames");
     }
 
     private void Reset()

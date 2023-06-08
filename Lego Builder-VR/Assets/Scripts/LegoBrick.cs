@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.Events;
 using static LegoBrick;
 
 public class LegoBrick : MonoBehaviour
@@ -31,7 +32,7 @@ public class LegoBrick : MonoBehaviour
         Black,
         Blue,
         Green,
-        DarkTurqoise,
+        DarkTurquoise,
         Red,
         DarkPink,
         Brown,
@@ -41,7 +42,7 @@ public class LegoBrick : MonoBehaviour
         BlackTransparent,
         BlueTransparent,
         GreenTransparent,
-        DarkTurqoiseTransparent,
+        DarkTurquoiseTransparent,
         RedTransparent,
         DarkPinkTransparent,
         BrownTransparent,
@@ -140,5 +141,11 @@ public class LegoBrick : MonoBehaviour
         return $"Prefabs/Bricks/{brickType}_Brick";
     }
 
+
+    public UnityEvent onBeforeDestroy;
+    private void OnDestroy()
+    {
+        onBeforeDestroy?.Invoke();
+    }
 
 }

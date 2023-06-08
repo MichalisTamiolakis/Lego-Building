@@ -34,13 +34,7 @@ public class BuildArea : MonoBehaviour
 
     private void Start()
     {
-        LegoBrick.Create(LegoBrick.BrickType.B2x2, LegoBrick.BrickColor.Blue).GetComponent<LegoBrick>();
-        LegoBrick.Create(LegoBrick.BrickType.B2x2, LegoBrick.BrickColor.Green).GetComponent<LegoBrick>();
-        LegoBrick.Create(LegoBrick.BrickType.B2x2, LegoBrick.BrickColor.Brown).GetComponent<LegoBrick>();
-        LegoBrick.Create(LegoBrick.BrickType.B2x2, LegoBrick.BrickColor.Lime).GetComponent<LegoBrick>();
-
-
-        LegoBrick.Create(LegoBrick.BrickType.B2x6, LegoBrick.BrickColor.DarkPink).GetComponent<LegoBrick>();
+        LegoBrick.Create(LegoBrick.BrickType.B2x2, LegoBrick.BrickColor.DarkTurquoise).GetComponent<LegoBrick>();
     }
 
     public bool gizmos = false;
@@ -148,6 +142,10 @@ public class BuildArea : MonoBehaviour
         {
             for (int z = Mathf.Min(startCell.z, endCell.z); z < Mathf.Max(startCell.z, endCell.z); z++)
             {
+                Vector3Int pos = new Vector3Int(x, startCell.y, z);
+                if (!IsCellValid(pos))
+                    continue;
+
                 if(startCell.y == 0) // If it is the bottom row allow connection
                 {
                     return true;
