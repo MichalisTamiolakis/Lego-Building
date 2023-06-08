@@ -39,6 +39,18 @@ public class clickHandler : MonoBehaviour
         Controller.Instance.DecreaseStep();
     }
 
+    public void ShowModel()
+    {
+        Controller.Instance.ShowFinalModel();
+    }
+
+    public void ExitBuildScene()
+    {
+        SceneManager.UnloadSceneAsync("BuildingScene");
+        SceneManager.LoadScene("Menu", LoadSceneMode.Additive);
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;

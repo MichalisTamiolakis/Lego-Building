@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+//using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Assertions;
 using static LegoBrick;
 
 public class LegoBrick : MonoBehaviour
@@ -35,10 +37,36 @@ public class LegoBrick : MonoBehaviour
         Brown,
         LightGray,
         Yellow,
-        Lime
+        Lime,
+        BlackTransparent,
+        BlueTransparent,
+        GreenTransparent,
+        DarkTurqoiseTransparent,
+        RedTransparent,
+        DarkPinkTransparent,
+        BrownTransparent,
+        LightGrayTransparent,
+        YellowTransparent,
+        LimeTransparent,
+        ErrorColor
     }
 
-    public BrickColor color { get; private set; } = BrickColor.LightGray;
+    public BrickColor color
+    {
+        get=>_color;
+        set {
+            _color = value;
+
+            MeshRenderer rend;
+            if (rend = GetComponentInChildren<MeshRenderer>())
+            {
+                rend.material = BrickColorToMaterial(color);
+            }
+        }
+    }
+
+    [SerializeField]
+    private BrickColor _color;
 
     private Vector3Int[] typeToCells = new Vector3Int[]{
         new Vector3Int(1,1,1),
@@ -59,21 +87,30 @@ public class LegoBrick : MonoBehaviour
         get => typeToCells[(int)type];
     }
 
+    //public Vector3 Dimensions
+    //{
+    //    get => Vector3.Scale(BuildArea.cellDimensions, CellUnitDimensions);
+    //}
+
+    //public Vector3 Center
+    //{
+    //    get => Dimensions/2f;
+    //}
+
+    public void EnableErrorColor(bool enable)
+    {
+        MeshRenderer rend;
+        if (rend = GetComponentInChildren<MeshRenderer>())
+        {
+            rend.material = enable ? BrickColorToMaterial(BrickColor.ErrorColor) : BrickColorToMaterial(color);
+        }
+    } 
 
     public static GameObject Create(BrickType type, BrickColor color)
     {
         GameObject go = Instantiate(Resources.Load(BrickTypeToPrefabPath(type)) as GameObject);
 
-        MeshRenderer rend;
-        if(go && (rend = go.GetComponentInChildren<MeshRenderer>()))
-        {
-            rend.material = BrickColorToMaterial(color);
-        }
-
-        LegoBrick brick = go.GetComponent<LegoBrick>();
-        if(!go)
-            brick = go.AddComponent<LegoBrick>();
-
+        LegoBrick brick = go.GetComponent<LegoBrick>() ?? go.AddComponent<LegoBrick>();
         brick.color = color;
         brick.type = type;
 
@@ -86,6 +123,13 @@ public class LegoBrick : MonoBehaviour
         return Resources.Load($"Materials/Bricks/{colorString}") as Material;
     }
 
+    public static BrickColor BrickColorToTransparent(BrickColor color)
+    {
+        Debug.Assert((int)color <= 9);
+        BrickColor transColor = (BrickColor)((int)color + 10);
+        return transColor;
+    }
+
     public static string BrickTypeToPrefabPath(BrickType type)
     {
         string t = type.ToString();
@@ -95,5 +139,5 @@ public class LegoBrick : MonoBehaviour
         return $"Prefabs/Bricks/{brickType}_Brick";
     }
 
-   
+
 }
