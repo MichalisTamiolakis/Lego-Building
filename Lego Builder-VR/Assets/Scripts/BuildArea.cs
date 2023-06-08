@@ -7,7 +7,6 @@ public class BuildArea : MonoBehaviour
 {
     public static BuildArea Instance { get; private set; }
 
-
     public void Awake()
     {
         if(Instance != null && Instance != this)
@@ -35,9 +34,13 @@ public class BuildArea : MonoBehaviour
 
     private void Start()
     {
-        LegoBrick.Create(LegoBrick.BrickType.B1x2, LegoBrick.BrickColor.Blue).GetComponent<LegoBrick>();
-        LegoBrick.Create(LegoBrick.BrickType.B2x2, LegoBrick.BrickColor.Red).GetComponent<LegoBrick>();
-        LegoBrick.Create(LegoBrick.BrickType.B2x6, LegoBrick.BrickColor.Red).GetComponent<LegoBrick>();
+        LegoBrick.Create(LegoBrick.BrickType.B2x2, LegoBrick.BrickColor.Blue).GetComponent<LegoBrick>();
+        LegoBrick.Create(LegoBrick.BrickType.B2x2, LegoBrick.BrickColor.Green).GetComponent<LegoBrick>();
+        LegoBrick.Create(LegoBrick.BrickType.B2x2, LegoBrick.BrickColor.Brown).GetComponent<LegoBrick>();
+        LegoBrick.Create(LegoBrick.BrickType.B2x2, LegoBrick.BrickColor.Lime).GetComponent<LegoBrick>();
+
+
+        LegoBrick.Create(LegoBrick.BrickType.B2x6, LegoBrick.BrickColor.DarkPink).GetComponent<LegoBrick>();
     }
 
     public bool gizmos = false;
@@ -95,7 +98,7 @@ public class BuildArea : MonoBehaviour
         rotation = Quaternion.LookRotation(newForward, Vector3.up);
 
         Vector3 brickCellCenter = transform.InverseTransformPoint(brick.transform.position);
-        position = GetClosestVertex(brickCellCenter);
+        position = GetClosestVertexPosition(brickCellCenter);
     }
 
     /// <summary>
@@ -107,19 +110,19 @@ public class BuildArea : MonoBehaviour
     /// <returns></returns>
     public bool DoesBrickFit(LegoBrick brick)
     {
-        Vector3Int xAxis = Vector3Int.RoundToInt(brick.transform.rotation * new Vector3(brick.CellUnitDimensions.x,0 ,0));
-        Vector3Int yAxis = Vector3Int.RoundToInt(brick.transform.rotation * new Vector3(0, brick.CellUnitDimensions.y, 0));
-        Vector3Int zAxis = Vector3Int.RoundToInt(brick.transform.rotation * new Vector3(0, 0, brick.CellUnitDimensions.z));
+        GetBrickCells(brick, out Vector3Int startCell, out Vector3Int endCell);
 
-        Vector3Int startCell = GetClosestCell(transform.InverseTransformPoint(brick.transform.TransformPoint(cellDimensions / 2f)));
-        Vector3Int endCell = startCell + (xAxis + yAxis + zAxis); // The sum of all 3 previous axis is the end cell
-
-        for(int x = Mathf.Min(startCell.x, endCell.x-1); x<= Mathf.Max(startCell.x, endCell.x-1); x++)
+        for (int x = Mathf.Min(startCell.x, endCell.x); x< Mathf.Max(startCell.x, endCell.x); x++)
         {
-            for(int y = Mathf.Min(startCell.y, endCell.y-1); y<= Mathf.Max(startCell.y, endCell.y-1); y++)
+            for(int y = Mathf.Min(startCell.y, endCell.y); y< Mathf.Max(startCell.y, endCell.y); y++)
             {
-                for(int z = Mathf.Min(startCell.z, endCell.z-1); z<= Mathf.Max(startCell.z, endCell.z-1); z++)
+                for(int z = Mathf.Min(startCell.z, endCell.z); z< Mathf.Max(startCell.z, endCell.z); z++)
                 {
+                    if(!IsCellValid(new Vector3Int(x, y, z)))
+                    {
+                        return false;
+                    }
+
                     if (!cells[x,y,z].isEmpty)
                     {
                         return false;
@@ -138,18 +141,12 @@ public class BuildArea : MonoBehaviour
     /// <returns>True if it is supported, false otherwise</returns>
     public bool IsBrickSupported(LegoBrick brick)
     {
+        GetBrickCells(brick, out Vector3Int startCell, out Vector3Int endCell);
+
         // Check if it is attached to any other brick in y direction
-
-        Vector3Int xAxis = Vector3Int.RoundToInt(brick.transform.rotation * new Vector3(brick.CellUnitDimensions.x, 0, 0));
-        Vector3Int yAxis = Vector3Int.RoundToInt(brick.transform.rotation * new Vector3(0, brick.CellUnitDimensions.y, 0));
-        Vector3Int zAxis = Vector3Int.RoundToInt(brick.transform.rotation * new Vector3(0, 0, brick.CellUnitDimensions.z));
-
-        Vector3Int startCell = GetClosestCell(transform.InverseTransformPoint(brick.transform.TransformPoint(cellDimensions / 2f)));
-        Vector3Int endCell = startCell + (xAxis + yAxis + zAxis); // The sum of all 3 previous axis is the end cell
-
-        for (int x = Mathf.Min(startCell.x, endCell.x - 1); x <= Mathf.Max(startCell.x, endCell.x - 1); x++)
+        for (int x = Mathf.Min(startCell.x, endCell.x); x < Mathf.Max(startCell.x, endCell.x); x++)
         {
-            for (int z = Mathf.Min(startCell.z, endCell.z - 1); z <= Mathf.Max(startCell.z, endCell.z - 1); z++)
+            for (int z = Mathf.Min(startCell.z, endCell.z); z < Mathf.Max(startCell.z, endCell.z); z++)
             {
                 if(startCell.y == 0) // If it is the bottom row allow connection
                 {
@@ -179,20 +176,13 @@ public class BuildArea : MonoBehaviour
 
     public bool AllocatePosition(LegoBrick brick)
     {
-        Vector3Int xAxis = Vector3Int.RoundToInt(brick.transform.rotation * new Vector3(brick.CellUnitDimensions.x, 0, 0));
-        Vector3Int yAxis = Vector3Int.RoundToInt(brick.transform.rotation * new Vector3(0, brick.CellUnitDimensions.y, 0));
-        Vector3Int zAxis = Vector3Int.RoundToInt(brick.transform.rotation * new Vector3(0, 0, brick.CellUnitDimensions.z));
+        GetBrickCells(brick, out Vector3Int startCell, out Vector3Int endCell);
 
-        Vector3Int startCell = GetClosestCell(transform.InverseTransformPoint(brick.transform.TransformPoint(cellDimensions / 2f)));
-        Vector3Int endCell = startCell + (xAxis + yAxis + zAxis); // The sum of all 3 previous axis is the end cell
-
-        Debug.Log($"{startCell} : {endCell}");
-
-        for (int x = Mathf.Min(startCell.x, endCell.x - 1); x <= Mathf.Max(startCell.x, endCell.x - 1); x++)
+        for (int x = Mathf.Min(startCell.x, endCell.x); x < Mathf.Max(startCell.x, endCell.x); x++)
         {
-            for (int y = Mathf.Min(startCell.y, endCell.y - 1); y <= Mathf.Max(startCell.y, endCell.y - 1); y++)
+            for (int y = Mathf.Min(startCell.y, endCell.y); y < Mathf.Max(startCell.y, endCell.y); y++)
             {
-                for (int z = Mathf.Min(startCell.z, endCell.z - 1); z <= Mathf.Max(startCell.z, endCell.z - 1); z++)
+                for (int z = Mathf.Min(startCell.z, endCell.z); z < Mathf.Max(startCell.z, endCell.z); z++)
                 {
                     if (!cells[x, y, z].isEmpty)
                     {
@@ -204,6 +194,36 @@ public class BuildArea : MonoBehaviour
         }
 
         return true;
+    }
+
+    public void GetBrickCells(LegoBrick brick, out Vector3Int startCell, out Vector3Int endCell)
+    {
+        Vector3Int xAxis = Vector3Int.RoundToInt(brick.transform.rotation * new Vector3(brick.CellUnitDimensions.x, 0, 0));
+        Vector3Int yAxis = Vector3Int.RoundToInt(brick.transform.rotation * new Vector3(0, brick.CellUnitDimensions.y, 0));
+        Vector3Int zAxis = Vector3Int.RoundToInt(brick.transform.rotation * new Vector3(0, 0, brick.CellUnitDimensions.z));
+        Vector3Int offset = xAxis+yAxis+zAxis;
+
+        startCell = GetClosestCell(transform.InverseTransformPoint(brick.transform.TransformPoint(cellDimensions / 2f)));
+        endCell = startCell + offset; // The sum of all 3 previous axis is the end cell
+
+        if (offset.x < 0)
+        {
+            startCell += Vector3Int.right;
+            endCell += Vector3Int.right;
+        }
+
+        if (offset.y < 0)
+        {
+            startCell += Vector3Int.up;
+            endCell += Vector3Int.up;
+        }
+
+        if (offset.z < 0)
+        {
+            startCell += Vector3Int.forward;
+            endCell += Vector3Int.forward;
+        }
+
     }
 
     private Vector3 NearestWorldAxis(Vector3 v)
@@ -243,18 +263,28 @@ public class BuildArea : MonoBehaviour
     }
 
     /// <summary>
-    /// Gets the closest cell vertex to the given point.
+    /// Gets the closest cell vertex position to the given point.
     /// </summary>
     /// <param name="point">The point in local coordinates</param>
     /// <returns></returns>
-    public Vector3 GetClosestVertex(Vector3 point)
+    public Vector3 GetClosestVertexPosition(Vector3 point)
     {
 
-        return Vector3.Scale(new Vector3Int(
+        return Vector3.Scale(GetClosestVertex(point), cellDimensions);
+    }
+
+    /// <summary>
+    /// Gets the closest cell vertex index at the position given.
+    /// </summary>
+    /// <param name="point"></param>
+    /// <returns></returns>
+    public Vector3Int GetClosestVertex(Vector3 point)
+    {
+        return new Vector3Int(
                     Mathf.RoundToInt(Mathf.Clamp(point.x, 0f, Dimensions.x) / cellDimensions.x),
                     Mathf.RoundToInt(Mathf.Clamp(point.y, 0f, Dimensions.y) / cellDimensions.y),
                     Mathf.RoundToInt(Mathf.Clamp(point.z, 0f, Dimensions.z) / cellDimensions.z)
-                ), cellDimensions);
+                );
     }
 
     /// <summary>
@@ -280,17 +310,6 @@ public class BuildArea : MonoBehaviour
             cell.y >= 0 && cell.y < numberCells.y &&
             cell.z >= 0 && cell.z < numberCells.z;
     }
-
-    /// <summary>
-    /// Returns the dimensions needed for this brick in the grid, based on the xy orientation of it.
-    /// </summary>
-    /// <param name="brick"></param>
-    /// <returns></returns>
-    private Vector3Int GetBrickCellUnitDimensions(LegoBrick brick)
-    {
-        throw new NotImplementedException();
-    }
-
 }
 
 [SerializeField]
