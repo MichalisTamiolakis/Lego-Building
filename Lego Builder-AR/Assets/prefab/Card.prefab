@@ -2371,6 +2371,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50cb75504f5d4734fa831030d24b3b0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canvas: {fileID: 0}
+  buildingScene: {fileID: 3671218413828509753, guid: 43d7c15bced433f49a13b57076724afa, type: 3}
   prefabId: 0
 --- !u!114 &1656259171678571191
 MonoBehaviour:

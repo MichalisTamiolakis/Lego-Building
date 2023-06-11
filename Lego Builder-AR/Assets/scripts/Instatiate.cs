@@ -27,8 +27,10 @@ public class Instatiate : MonoBehaviour
 
     void Start()
     {
-        string path = Application.dataPath + "/json/Models.json";
-        
+        //string path = Application.dataPath + "/json/Models.json";
+        //string path = Path.Combine(Application.streamingAssetsPath, "/json/Models.json");
+        string path = Application.streamingAssetsPath + "/Models.json";
+
         string jsonString = File.ReadAllText(path);
         Model[] models = JsonConvert.DeserializeObject<Model[]>(jsonString);
         for (int i = 0; i < models.Length; i++)

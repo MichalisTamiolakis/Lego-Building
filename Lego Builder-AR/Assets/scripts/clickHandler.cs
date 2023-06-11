@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class clickHandler : MonoBehaviour
 {
     public GameObject canvas;
+    public GameObject buildingScene;
     public int prefabId ;
     // Start is called before the first frame update
     void Start()
@@ -23,10 +24,24 @@ public class clickHandler : MonoBehaviour
 
     public void ChangeScene()
     {
-        
-        SceneManager.UnloadSceneAsync("Menu");
+
+        /*SceneManager.UnloadSceneAsync("Menu");
         SceneManager.LoadScene("BuildingScene", LoadSceneMode.Additive);
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneManager.sceneLoaded += OnSceneLoaded;*/
+
+        GameObject menu = GameObject.Find("Menu");
+        if (menu == null)
+        {
+            Debug.Log("Menu object not found!");
+        }
+        else
+        {
+            Destroy(menu);
+            Debug.Log("Menu object found! " + buildingScene);
+            Vector3 position = new Vector3(0f, 0f, 0f);
+            Quaternion rotation = Quaternion.identity;
+            GameObject instantiatedPrefab = Instantiate(buildingScene, position, rotation);
+        }
     }
 
     public void ShowNextCommand()

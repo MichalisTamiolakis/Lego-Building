@@ -8,7 +8,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/hololensScene.unity
     guid: a2545886595282741b75c16aa8dbfdd6
-  - enabled: 1
+  - enabled: 0
+    path: Assets/Scenes/Menu.unity
+    guid: 7f60822a4d807944486a4fb96d767118
+  - enabled: 0
     path: Assets/Scenes/BuildingScene.unity
     guid: f66cce90dff51804cb5a3bc8b11416b5
   m_configObjects:
