@@ -29,10 +29,18 @@ public class Instatiate : MonoBehaviour
     {
         //string path = Application.dataPath + "/json/Models.json";
         //string path = Path.Combine(Application.streamingAssetsPath, "/json/Models.json");
-        string path = Application.streamingAssetsPath + "/Models.json";
+        
+        
+        //string path = Application.streamingAssetsPath + "/Models.json";
+        //string jsonString = File.ReadAllText(path);
+        //Model[] models = JsonConvert.DeserializeObject<Model[]>(jsonString);
 
-        string jsonString = File.ReadAllText(path);
-        Model[] models = JsonConvert.DeserializeObject<Model[]>(jsonString);
+        string fileData = "";
+        string fileName = Path.Combine(Application.streamingAssetsPath, "Models.json");
+        byte[] bytes = UnityEngine.Windows.File.ReadAllBytes(fileName);
+        fileData = System.Text.Encoding.ASCII.GetString(bytes);
+        Model[] models = JsonConvert.DeserializeObject<Model[]>(fileData);
+
         for (int i = 0; i < models.Length; i++)
         {
             string duration = "";

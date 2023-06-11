@@ -76,6 +76,7 @@ public class Controller : MonoBehaviour
             if (ret != null)
             {
                 AnimationExecution animation = Manager.Instance.GetBrick(c.blockID).GetComponent<AnimationExecution>();
+                //AnimationPlayer animation = Manager.Instance.GetBrick(c.blockID).GetComponent<AnimationPlayer>();
 
                 if (animation != null)
                 {
@@ -165,14 +166,18 @@ public class Controller : MonoBehaviour
 
                     AnimationExecution animation = movingBrick.AddComponent<AnimationExecution>();
                     animation.command = c;
-                    animation.StartAnimation();
+                    //AnimationPlayer player = movingBrick.AddComponent<AnimationPlayer>();
+                    //player.animation = c.frames;
+                    //player.StartAnimation();
 
                 }
                 else
                 {
                     AnimationExecution animation = block.AddComponent<AnimationExecution>();
                     animation.command = c;
-                    animation.StartAnimation();
+                    //AnimationPlayer player = block.AddComponent<AnimationPlayer>();
+                    //player.animation = c.frames;
+                    //player.StartAnimation();
                 }
                 
                 break;
