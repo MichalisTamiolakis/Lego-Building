@@ -8,8 +8,13 @@ public class test : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         
-        LegoBrick.Create(LegoBrick.BrickType.B2x2, LegoBrick.BrickColor.Red);
+    }
+
+    public void print()
+    {
+        Debug.Log("Clicked");
     }
 
     // Update is called once per frame
