@@ -21,13 +21,6 @@ public class Recorder : MonoBehaviour
         }
     }
 
-    void Start()
-    {
-        GameObject go = LegoBrick.Create(LegoBrick.BrickType.B2x2, LegoBrick.BrickColor.Blue);
-
-        CreateNewRecording("TestRecording");
-    }
-
     void CreateNewRecording(string name)
     {
         recording = new Recording(name);

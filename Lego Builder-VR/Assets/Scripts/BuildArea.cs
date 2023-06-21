@@ -32,11 +32,6 @@ public class BuildArea : MonoBehaviour
         }   
     }
 
-    private void Start()
-    {
-        LegoBrick.Create(LegoBrick.BrickType.B2x2, LegoBrick.BrickColor.DarkTurquoise).GetComponent<LegoBrick>();
-    }
-
     public bool gizmos = false;
 
     public Vector3Int numberCells  = new Vector3Int( 48, 50, 48);

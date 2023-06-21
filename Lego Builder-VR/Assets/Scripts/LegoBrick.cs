@@ -1,3 +1,4 @@
+using Autohand;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -115,6 +116,30 @@ public class LegoBrick : MonoBehaviour
 
         brick.color = color;
         brick.type = type;
+
+        return go;
+    }
+
+    public static GameObject CreateKinematic(BrickType type, BrickColor color)
+    {
+        GameObject go = LegoBrick.Create(type, color);
+
+        if (go.TryGetComponent(out DestroyOnRelease dr))
+        {
+            Destroy(dr);
+        }
+        if(go.TryGetComponent(out Grabbable grab))
+        {
+            Destroy(grab);
+        }
+        if (go.TryGetComponent(out BrickTransformRecorder r))
+        {
+            Destroy(r);
+        }
+        if(go.TryGetComponent(out Rigidbody rb))
+        {
+            Destroy(rb);
+        }
 
         return go;
     }
