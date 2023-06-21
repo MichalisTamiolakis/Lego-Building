@@ -4,7 +4,6 @@ using UnityEngine;
 using Newtonsoft.Json;
 using System.IO;
 using UnityEngine.UI;
-using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 using UnityEngine.SceneManagement;
 
 public class Controller : MonoBehaviour
@@ -77,6 +76,7 @@ public class Controller : MonoBehaviour
             if (ret != null)
             {
                 AnimationExecution animation = Manager.Instance.GetBrick(c.blockID).GetComponent<AnimationExecution>();
+                //AnimationPlayer animation = Manager.Instance.GetBrick(c.blockID).GetComponent<AnimationPlayer>();
 
                 if (animation != null)
                 {
@@ -134,12 +134,16 @@ public class Controller : MonoBehaviour
                     currentColor = c.brickColor;
                     currentType = c.brickType;
                     GameObject brick = LegoBrick.Create(c.brickType, c.brickColor);
+                    Vector3 targetScale = new Vector3(1f, 1f, 1f);
                     
                     MeshRenderer childMeshRenderer = brick.GetComponentInChildren<MeshRenderer>();
-                    Vector3 offset = new Vector3(1f, 0.243f, 0.13f);
-                    instantiatedPopup = Instantiate(popup, transform.position + offset, transform.rotation, transform);
+                    //Vector3 offset = new Vector3(1f, 0.243f, 0.13f);
+                    //Vector3 offset = new Vector3(0f, 0f, 0f);
+                    //instantiatedPopup = Instantiate(popup, transform.position + offset, transform.rotation, transform);
+                    instantiatedPopup = Instantiate(popup, transform);
                     GameObject brickContainer = instantiatedPopup.transform.Find("Panel/brickContainer/rotationPivot").gameObject;
                     brick.transform.SetParent(brickContainer.transform);
+                    brick.transform.localScale = targetScale;
                     brick.transform.localPosition = Vector3.Scale(new Vector3(-0.008f/2f, -0.0096f/2f, -0.008f/2f), brick.GetComponent<LegoBrick>().CellUnitDimensions);
                 }
 
@@ -162,14 +166,18 @@ public class Controller : MonoBehaviour
 
                     AnimationExecution animation = movingBrick.AddComponent<AnimationExecution>();
                     animation.command = c;
-                    animation.StartAnimation();
+                    //AnimationPlayer player = movingBrick.AddComponent<AnimationPlayer>();
+                    //player.animation = c.frames;
+                    //player.StartAnimation();
 
                 }
                 else
                 {
                     AnimationExecution animation = block.AddComponent<AnimationExecution>();
                     animation.command = c;
-                    animation.StartAnimation();
+                    //AnimationPlayer player = block.AddComponent<AnimationPlayer>();
+                    //player.animation = c.frames;
+                    //player.StartAnimation();
                 }
                 
                 break;
