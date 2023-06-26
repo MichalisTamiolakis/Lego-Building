@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(Rigidbody))]
 public class BrickRecordingTriggers:MonoBehaviour
 {
     public BrickTransformRecorder recorder;
@@ -9,24 +8,26 @@ public class BrickRecordingTriggers:MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
+        if(other.gameObject.tag != "BuildArea")
+        {
+            return;
+        }   
+
         recorder.ClearRecording();
         recorder.StartRecordingTransform();
+        Debug.Log("Entered recording area");
     }
 
     public void OnTriggerExit(Collider other)
     {
+        if (other.gameObject.tag != "BuildArea")
+        {
+            return;
+        }
+
         recorder.StopRecordingTransform();
         recorder.ClearRecording();
-    }
-
-    [ContextMenu("Save Recording")]
-    public void SaveRecording()
-    {
-        recorder.StopRecordingTransform();
-
-        int brickID = Recorder.Instance.recording.GenerateBrickID();
-        Recorder.Instance.recording.AddCommand(Command.CreateRequireBrickCommand(brickID, brick));
-        Recorder.Instance.recording.AddCommand(new Command(Command.CommandType.MoveBrick, brickID, recorder.frames));
+        Debug.Log("Left recording area");
     }
 
     private void Reset()

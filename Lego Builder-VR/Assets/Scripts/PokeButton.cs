@@ -11,13 +11,18 @@ public class PokeButton : MonoBehaviour
     public Color pressedColor;
     public Color disabledColor;
     public UnityEvent onClick;
+    public float debounceDelay = .2f;
 
+    private bool canPress= true;
     private bool _disabled = false;
     public bool disabled
     {
         get => _disabled;
         set
         {
+            if(value == _disabled)
+                return;
+
               _disabled = value;
             if (_disabled)
             {
@@ -37,16 +42,17 @@ public class PokeButton : MonoBehaviour
 
     public void PokePressed()
     {
-        if(!_disabled)
+        if(canPress && !_disabled)
             image.color = pressedColor;
     }
 
     public void PokeReleased()
     {
-        if (!_disabled)
+        if (canPress && !_disabled)
         {
             image.color = normalColor;
             onClick?.Invoke();
+            StartCoroutine(Debounce());
         }
     }
 
@@ -54,6 +60,14 @@ public class PokeButton : MonoBehaviour
     {
         if(!_disabled)
             image.color = normalColor;
+        canPress = true;
+    }
+
+    private IEnumerator Debounce()
+    {
+        canPress = false;
+        yield return new WaitForSeconds(debounceDelay);
+        canPress = true;
     }
 
 }

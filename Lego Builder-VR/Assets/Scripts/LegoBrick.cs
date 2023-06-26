@@ -136,9 +136,14 @@ public class LegoBrick : MonoBehaviour
         {
             Destroy(r);
         }
-        if(go.TryGetComponent(out Rigidbody rb))
+        if (go.TryGetComponent(out BrickRecordingTriggers rt))
         {
-            DestroyImmediate(rb);
+            Destroy(rt);
+        }
+        if (go.TryGetComponent(out Rigidbody rb))
+        {
+            rb.isKinematic = true;
+            Destroy(rb);
         }
 
         return go;

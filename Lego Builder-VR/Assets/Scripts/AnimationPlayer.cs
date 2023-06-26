@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class AnimationPlayer : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class AnimationPlayer : MonoBehaviour
     public bool loop = true;
     public float loopDelay = 2f;
     public List<AnimationFrame> animation = new List<AnimationFrame>();
+
+    public UnityEvent onLooped = new UnityEvent();
 
 
     public void StartAnimation()
@@ -62,6 +65,7 @@ public class AnimationPlayer : MonoBehaviour
                 transform.localRotation = nextFrame.rotation;
                 if (!loop)
                 {
+                    onLooped?.Invoke();
                     yield break;
                 }
 
@@ -70,6 +74,7 @@ public class AnimationPlayer : MonoBehaviour
                 currFrameIndex = 0;
                 time = 0;
                 yield return new WaitForSeconds(loopDelay);
+                onLooped?.Invoke();
             }
             yield return new WaitForEndOfFrame();
         }

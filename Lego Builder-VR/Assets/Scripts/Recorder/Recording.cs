@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Assertions;
 
+[System.Serializable]
 public class Recording
 {
     public enum Difficulty
@@ -43,9 +45,32 @@ public class Recording
         {
             pieces++;
         }
+        if(c.type == Command.CommandType.MoveBrick)
+        {
+            if(c.frames.Count > 0)
+                time += (uint)Mathf.RoundToInt(c.frames[c.frames.Count - 1].timestamp);
+        }
+
         commands.Add(c);
     }
 
+    public void RemoveCommand(int commandIndex)
+    {
+        Debug.Assert(commandIndex < commands.Count);
+
+        Command c = commands[commandIndex];
+        if (c.type == Command.CommandType.RequireBrick)
+        {
+            pieces--;
+        }
+        if (c.type == Command.CommandType.MoveBrick)
+        {
+            if (c.frames.Count > 0)
+                time -= (uint)Mathf.RoundToInt(c.frames[c.frames.Count - 1].timestamp);
+        }
+
+        commands.RemoveAt(commandIndex);
+    }
 
     public static string ToJson(Recording r)
     {

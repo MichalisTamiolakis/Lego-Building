@@ -17,7 +17,6 @@ public class BuildingManager : MonoBehaviour
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("UnplacedBricks") && other.gameObject.TryGetComponent(out LegoBrick brick))
         {
-            Debug.Log($"Brick Entered Area {other.name}");
             SpawnTransparentForBrick(brick);
             AttachCallbacks(brick);
             StartRecording(brick);
@@ -44,11 +43,7 @@ public class BuildingManager : MonoBehaviour
         {
             return;
         }
-        LegoBrick brickTrans = LegoBrick.Create(brick.type, LegoBrick.BrickColorToTransparent(brick.color)).GetComponent<LegoBrick>();
-        if(brickTrans.TryGetComponent(out Rigidbody rb))
-        {
-            Destroy(rb);
-        }
+        LegoBrick brickTrans = LegoBrick.CreateKinematic(brick.type, LegoBrick.BrickColorToTransparent(brick.color)).GetComponent<LegoBrick>();
         if (brickTrans.TryGetComponent(out Collider col))
         {
             Destroy(col);
@@ -127,29 +122,28 @@ public class BuildingManager : MonoBehaviour
 
         if (buildArea.DoesBrickFit(actualToTransparent[brick]) && buildArea.IsBrickSupported(actualToTransparent[brick]))
         {
-
-            buildArea.AllocatePosition(actualToTransparent[brick]);
-            brick.transform.position = buildArea.transform.TransformPoint(pos);
-            brick.transform.rotation = buildArea.transform.rotation * rot;
             if (brick.TryGetComponent(out Rigidbody rb))
             {
                 rb.isKinematic = true;
             }
-            if (brick.TryGetComponent(out DestroyOnRelease dor))
-            {
-                dor.enabled = false;
-            }
-            if(brick.TryGetComponent(out Grabbable grabbable))
-            {
-                grabbable.isGrabbable = false;
-            }
-            SetLayerRecursively(brick.gameObject, LayerMask.NameToLayer("Bricks"));
+            brick.transform.position = buildArea.transform.TransformPoint(pos);
+            brick.transform.rotation = buildArea.transform.rotation * rot;
+            //if (brick.TryGetComponent(out DestroyOnRelease dor))
+            //{
+            //    dor.enabled = false;
+            //}
+            //if(brick.TryGetComponent(out Grabbable grabbable))
+            //{
+            //    grabbable.isGrabbable = false;
+            //}
 
             DestroyTransparentOfBrick(brick);
             actualToTransparent.Remove(brick);
 
             StopRecording(brick);
             AcceptRecording(brick);
+
+            Destroy(brick.gameObject);
         }
     }
 
@@ -277,9 +271,9 @@ public class BuildingManager : MonoBehaviour
     {
         if (brick.TryGetComponent(out BrickTransformRecorder br))
         {
-            int brickID = Recorder.Instance.recording.GenerateBrickID();
-            Recorder.Instance.recording.AddCommand(Command.CreateRequireBrickCommand(brickID, brick));
-            Recorder.Instance.recording.AddCommand(new Command(Command.CommandType.MoveBrick, brickID, br.frames));
+            int brickID = Recorder.Instance.GenerateBlockID();
+            Recorder.Instance.AddCommand(Command.CreateRequireBrickCommand(brickID, brick), play: true);
+            Recorder.Instance.AddCommand(new Command(Command.CommandType.MoveBrick, brickID, br.frames), play: true);
         }
     }
 

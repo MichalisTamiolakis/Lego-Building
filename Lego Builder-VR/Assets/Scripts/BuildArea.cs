@@ -177,6 +177,9 @@ public class BuildArea : MonoBehaviour
             {
                 for (int z = Mathf.Min(startCell.z, endCell.z); z < Mathf.Max(startCell.z, endCell.z); z++)
                 {
+                    if (!IsCellValid(new Vector3Int(x, y, z)))
+                        return false;
+
                     if (!cells[x, y, z].isEmpty)
                     {
                         return false;
@@ -187,6 +190,21 @@ public class BuildArea : MonoBehaviour
         }
 
         return true;
+    }
+
+    public void DeallocatePosition(LegoBrick brick)
+    {
+        GetBrickCells(brick, out Vector3Int startCell, out Vector3Int endCell);
+        for (int x = Mathf.Min(startCell.x, endCell.x); x < Mathf.Max(startCell.x, endCell.x); x++)
+        {
+            for (int y = Mathf.Min(startCell.y, endCell.y); y < Mathf.Max(startCell.y, endCell.y); y++)
+            {
+                for (int z = Mathf.Min(startCell.z, endCell.z); z < Mathf.Max(startCell.z, endCell.z); z++)
+                {
+                    cells[x, y, z].isEmpty = true;
+                }
+            }
+        }
     }
 
     public void GetBrickCells(LegoBrick brick, out Vector3Int startCell, out Vector3Int endCell)

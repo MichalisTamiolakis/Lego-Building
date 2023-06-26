@@ -47,8 +47,8 @@ public class GameManager : MonoBehaviour
     {
         currentRecording = recording;
         TeleportTo(1);
-        Recorder.Instance.CreateNewRecording("TestRecording");
-        
+        Recorder.Instance.SetRecording(recording);
+        Recorder.Instance.PlayRecording();
     }
 
     public void NewBuild()

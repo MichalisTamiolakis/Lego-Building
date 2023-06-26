@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5040294877782616900}
   - component: {fileID: 855511446090959086}
   - component: {fileID: -3630709330184856159}
+  - component: {fileID: -2386651777782069667}
   m_Layer: 7
   m_Name: 2x6_Brick
   m_TagString: Untagged
@@ -188,6 +189,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec35ab0c576fae74f8b81ef0c7283415, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  brick: {fileID: 2670358125394388995}
+--- !u!114 &-2386651777782069667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3490908313258613746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9fe218301e966b43ba9ee512f73710b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  recorder: {fileID: -3630709330184856159}
   brick: {fileID: 2670358125394388995}
 --- !u!1 &5620485178651550507
 GameObject:
