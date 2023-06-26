@@ -21,7 +21,7 @@ public class Recorder : MonoBehaviour
         }
     }
 
-    void CreateNewRecording(string name)
+    public void CreateNewRecording(string name)
     {
         recording = new Recording(name);
     }

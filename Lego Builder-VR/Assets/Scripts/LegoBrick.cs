@@ -138,7 +138,7 @@ public class LegoBrick : MonoBehaviour
         }
         if(go.TryGetComponent(out Rigidbody rb))
         {
-            Destroy(rb);
+            DestroyImmediate(rb);
         }
 
         return go;

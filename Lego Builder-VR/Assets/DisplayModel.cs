@@ -1,41 +1,80 @@
+using Autohand;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.UIElements;
 
-public class DisplayModel : MonoBehaviour
+public class DisplayModels : MonoBehaviour
 {
-    public string fileName;
+    public string folderName;
     public Transform buildArea;
     public TMPro.TMP_Text title;
     public TMPro.TMP_Text pieces;
+    public TMPro.TMP_Text difficulty;
     public TMPro.TMP_Text time;
+    public PhysicsGadgetButton nextModel;
+    public PhysicsGadgetButton previousModel;
+
 
     private Dictionary<int, GameObject> idToBrickGameObject = new Dictionary<int, GameObject>();
 
+    private List<string> files = new List<string>();
+    private int currentFileIndex = 0;
+    private Recording current;
+
     private void Start()
     {
-        string filePath = Path.Combine(Application.streamingAssetsPath, fileName);
-        if (File.Exists(filePath)) //Problematic part 
+        
+    }
+
+    private void OnEnable()
+    {
+        FetchAllFiles();
+        if (files.Count > 0)
         {
-            string dataAsJson = File.ReadAllText(filePath);
-            DisplayRecordedModel(Recording.FromJson(dataAsJson));
+            nextModel.OnPressed.AddListener(ShowNext);
+            previousModel.OnPressed.AddListener(ShowPrevious);
+            DisplayModel(currentFileIndex);
         }
         else
         {
-            Debug.LogError("Cannot load game data!");
+            Debug.LogError("No Recordings found.");
         }
     }
 
-    public void DisplayRecordedModel(Recording recording)
+    private void OnDisable()
     {
-        // Destroy old model
-        foreach(GameObject go in idToBrickGameObject.Values)
+        DestroyModel();
+        nextModel.OnPressed.RemoveListener(ShowNext);
+        previousModel.OnPressed.RemoveListener(ShowPrevious);
+    }
+
+    // TODO fetch data from internet.
+    public void FetchAllFiles()
+    {
+        files.Clear();
+        string folderPath = Path.Combine(Application.streamingAssetsPath, folderName);
+        var info = new DirectoryInfo(folderPath);
+        var fileInfo = info.GetFiles("*.json");
+        foreach (var file in fileInfo)
         {
-            Destroy(go);
+            files.Add(Path.Combine(folderPath, file.FullName));
         }
-        idToBrickGameObject.Clear();
+    }
+
+    public void DisplayModel(int fileIndex)
+    {
+        string json = File.ReadAllText(files[fileIndex]);
+        current = Recording.FromJson(json);
+        DisplayRecordedModel(current);
+    }
+
+    private void DisplayRecordedModel(Recording recording)
+    {
+        current = recording;
+        // Destroy old model
+        DestroyModel();
 
         // Create new one
         foreach (Command c in recording.commands)
@@ -61,6 +100,7 @@ public class DisplayModel : MonoBehaviour
         // Show Info with UI
         title.text = recording.name;
         pieces.text = $"{recording.pieces}";
+        difficulty.text = recording.difficulty.ToString();
 
         TimeSpan t = TimeSpan.FromSeconds(recording.time);
 
@@ -68,5 +108,34 @@ public class DisplayModel : MonoBehaviour
                         t.Hours,
                         t.Minutes);
         time.text = answer;
+    }
+
+    public void DestroyModel()
+    {
+        foreach (GameObject go in idToBrickGameObject.Values)
+        {
+            Destroy(go);
+        }
+        idToBrickGameObject.Clear();
+    }
+
+    public void ShowNext()
+    {
+        FetchAllFiles();
+        currentFileIndex = currentFileIndex >= files.Count - 1 ? 0 : currentFileIndex + 1;
+
+        DisplayModel(currentFileIndex);
+    }
+
+    public void ShowPrevious()
+    {
+        FetchAllFiles();
+        currentFileIndex = currentFileIndex <= 0 ? files.Count - 1 : currentFileIndex-1;
+        DisplayModel(currentFileIndex);
+    }
+
+    public void LoadCurrent()
+    {
+        GameManager.Instance.LoadBuild(current);
     }
 }

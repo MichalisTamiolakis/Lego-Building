@@ -7,6 +7,14 @@ using UnityEngine;
 
 public class Recording
 {
+    public enum Difficulty
+    {
+        Easy,
+        Medium,
+        Hard,
+        VeryHard
+    }
+
     public Recording(string name)
     {
         this.name = name;
@@ -15,6 +23,7 @@ public class Recording
     public string name = "";
     public uint pieces = 0;
     public uint time = 0;
+    public Difficulty difficulty = Difficulty.Easy;
     public List<Command> commands = new List<Command>();
 
     private int lastBrickID = 0;
