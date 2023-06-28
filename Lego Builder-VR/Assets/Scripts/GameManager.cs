@@ -57,7 +57,7 @@ public class GameManager : MonoBehaviour
     public void NewBuild()
     {
         TeleportTo(1);
-        Recorder.Instance.CreateNewRecording("New Recording");
+        Recorder.Instance.CreateNewRecording("New Creation");
         gameState = GameState.Playing;
     }
 
