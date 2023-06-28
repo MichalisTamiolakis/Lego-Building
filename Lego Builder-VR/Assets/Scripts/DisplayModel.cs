@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class DisplayModels : MonoBehaviour
 {
-    public string folderName;
     public Transform buildArea;
     public TMPro.TMP_Text title;
     public TMPro.TMP_Text pieces;
@@ -26,11 +25,11 @@ public class DisplayModels : MonoBehaviour
 
     private void Start()
     {
-        
     }
 
     private void OnEnable()
     {
+        loadButton.interactable = false;
         FetchAllFiles();
         if (files.Count > 0)
         {
@@ -42,7 +41,6 @@ public class DisplayModels : MonoBehaviour
         else
         {
             Debug.LogError("No Recordings found.");
-            loadButton.interactable = false;
         }
     }
 
@@ -57,12 +55,14 @@ public class DisplayModels : MonoBehaviour
     public void FetchAllFiles()
     {
         files.Clear();
-        string folderPath = Path.Combine(Application.streamingAssetsPath, folderName);
-        var info = new DirectoryInfo(folderPath);
-        var fileInfo = info.GetFiles("*.json");
-        foreach (var file in fileInfo)
-        {
-            files.Add(Path.Combine(folderPath, file.FullName));
+        if (Directory.Exists(Path.Combine(Application.persistentDataPath, GameManager.storageFolder))){
+            string folderPath = Path.Combine(Application.persistentDataPath, GameManager.storageFolder);
+            var info = new DirectoryInfo(folderPath);
+            var fileInfo = info.GetFiles("*.json");
+            foreach (var file in fileInfo)
+            {
+                files.Add(Path.Combine(folderPath, file.FullName));
+            }
         }
     }
 

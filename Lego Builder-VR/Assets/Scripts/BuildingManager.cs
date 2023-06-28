@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Profiling;
-using static UnityEditor.PlayerSettings;
 
 [RequireComponent(typeof(BoxCollider))]
 public class BuildingManager : MonoBehaviour

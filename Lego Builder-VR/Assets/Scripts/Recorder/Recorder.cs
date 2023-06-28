@@ -52,7 +52,11 @@ public class Recorder : MonoBehaviour
 
         string jsonString = Recording.ToJson(recording);
 
-        string path = Path.Combine(Application.streamingAssetsPath, "Recordings", $"{recording.name}.json");
+        if (!Directory.Exists(Path.Combine(Application.persistentDataPath, GameManager.storageFolder)))
+        {
+            Directory.CreateDirectory(Path.Combine(Application.persistentDataPath, GameManager.storageFolder));
+        }
+        string path = Path.Combine(Application.persistentDataPath, GameManager.storageFolder,  $"{recording.name}.json");
         if(File.Exists(path))
         {
             File.Delete(path);

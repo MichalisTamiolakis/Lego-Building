@@ -1,5 +1,7 @@
+using Autohand;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Events;
@@ -20,25 +22,27 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public static string storageFolder = "Recordings";
+    
     public enum GameState
     {
         Menu = 0,
         Playing = 1,
     }
 
+    [Space(10)]
     public GameState gameState = GameState.Menu;
 
     public List<RoomData> rooms = new List<RoomData>();
     public int currentRoomIndex = 0;
 
-    public Transform player;
+    public AutoHandPlayer player;
 
     public UnityEvent<int, RoomData> onTeleport = new UnityEvent<int, RoomData>();
 
 
     private void Start()
     {
-        TeleportTo(currentRoomIndex);
     }
 
     // Loads the given recording and teleports to the main room (room 1).
@@ -69,10 +73,13 @@ public class GameManager : MonoBehaviour
         rooms[currentRoomIndex].roomParent.SetActive(false);
         rooms[roomIndex].roomParent.SetActive(true);
 
-        player.gameObject.SetActive(false);
-        player.transform.position = rooms[roomIndex].teleportLocation.position;
-        player.transform.rotation = rooms[roomIndex].teleportLocation.rotation;
-        player.gameObject.SetActive(true);
+        player.SetPosition(rooms[roomIndex].teleportLocation.position);
+        player.SetRotation(rooms[roomIndex].teleportLocation.rotation);
+
+        //player.gameObject.SetActive(false);
+        //player.transform.position = rooms[roomIndex].teleportLocation.position;
+        //player.transform.rotation = rooms[roomIndex].teleportLocation.rotation;
+        //player.gameObject.SetActive(true);
 
         currentRoomIndex = roomIndex;
         onTeleport?.Invoke(roomIndex, rooms[roomIndex]);
