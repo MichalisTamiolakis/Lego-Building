@@ -27,7 +27,6 @@ public class GameManager : MonoBehaviour
     }
 
     public GameState gameState = GameState.Menu;
-    public Recording currentRecording;
 
     public List<RoomData> rooms = new List<RoomData>();
     public int currentRoomIndex = 0;
@@ -45,30 +44,22 @@ public class GameManager : MonoBehaviour
     // Loads the given recording and teleports to the main room (room 1).
     public void LoadBuild(Recording recording)
     {
-        currentRecording = recording;
         TeleportTo(1);
         Recorder.Instance.SetRecording(recording);
         Recorder.Instance.PlayRecording();
+        gameState = GameState.Playing;
     }
 
     public void NewBuild()
     {
-
-    }
-
-    public void SaveCurrentRecording()
-    {
-
+        TeleportTo(1);
+        Recorder.Instance.CreateNewRecording("New Recording");
+        gameState = GameState.Playing;
     }
 
     public void Quit()
     {
         Application.Quit();
-    }
-
-    public void PlayTutorial()
-    {
-
     }
     
     public void TeleportTo(int roomIndex)

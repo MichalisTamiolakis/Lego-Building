@@ -6,12 +6,12 @@ using UnityEngine;
 public class BrickTransformRecorder : MonoBehaviour
 {
     public LegoBrick brick;
-    public List<AnimationFrame> frames { get; private set; } = new List<AnimationFrame>(1000);
+    public List<AnimationFrame> frames = new List<AnimationFrame>(100);
     private bool isRecording = false;
     private float frameTime = 0f;
 
     private const float minRecordDistance = 0.01f;
-    private const float minRecordAngle = 2f;
+    private const float minRecordAngle = 3f;
 
     public void ClearRecording()
     {

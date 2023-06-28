@@ -1,8 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using Microsoft.MixedReality.Toolkit.Experimental.UI;
+using UnityEditor;
 
 public class Recorder : MonoBehaviour
 {
@@ -19,6 +24,8 @@ public class Recorder : MonoBehaviour
     private int largestID = int.MinValue;
 
     private Stack<Command> commandHistory = new Stack<Command>();
+
+    private bool hasSaved = true;
 
     private void Awake()
     {
@@ -40,16 +47,22 @@ public class Recorder : MonoBehaviour
     [ContextMenu("Export Recording")]
     public void ExportRecording()
     {
+        hasSaved = true;
+        infoDisplay.save.interactable = false;
+
         string jsonString = Recording.ToJson(recording);
 
-        string path = Application.dataPath + "/Recordings/" + recording.name + ".json";
+        string path = Path.Combine(Application.streamingAssetsPath, "Recordings", $"{recording.name}.json");
         if(File.Exists(path))
         {
-            Debug.LogError("File already exists!");
-            return;
+            File.Delete(path);
         }
 
         File.WriteAllText(path, jsonString);
+
+#if UNITY_EDITOR
+        AssetDatabase.Refresh();
+#endif
     }
 
     public void SetRecording(Recording r)
@@ -66,28 +79,105 @@ public class Recorder : MonoBehaviour
     [System.Serializable]
     public class RecordingInfoDisplay
     {
-        public TMPro.TMP_Text title;
+        public GameObject defaultUI;
+        public GameObject exitNoSaveOptionsUI;
+        public TMPro.TMP_InputField title;
+        public Dropdown difficulty;
         public TMPro.TMP_Text pieces;
-        public TMPro.TMP_Text difficulty;
         public TMPro.TMP_Text time;
+        public Button save;
+        public Button exit;
+        public Button exitNoSave;
+        public Button cancelExit;
     }
 
     // Update display info every second
     private IEnumerator Start()
     {
+        NonNativeKeyboard.Instance.OnTextSubmitted += (_, _) => 
+        {
+            if (NonNativeKeyboard.Instance.InputField.text != recording.name)
+            {
+                string newName = NonNativeKeyboard.Instance.InputField.text;
+                recording.name = newName.Substring(0, Mathf.Min(newName.Length, 20));
+                hasSaved = false;
+                infoDisplay.save.interactable = true;
+            }
+        };
+        
+        infoDisplay.title.text = recording.name;
+        infoDisplay.title.onSelect.AddListener((string val) =>
+        {
+            NonNativeKeyboard.Instance.PresentKeyboard(recording.name);
+        });
+        
+        infoDisplay.difficulty.value = (int)recording.difficulty;
+        infoDisplay.difficulty.onValueChanged.AddListener((int val) =>
+        {
+            recording.difficulty = (Recording.Difficulty)val;
+            hasSaved = false;
+            infoDisplay.save.interactable = true;
+        });
+
+        // UI logic
+        infoDisplay.defaultUI.SetActive(true);
+        infoDisplay.exitNoSaveOptionsUI.SetActive(false);
+        infoDisplay.save.onClick.AddListener(() =>
+        {
+            ExportRecording();
+        });
+        infoDisplay.exit.onClick.AddListener(() =>
+        {
+            if (hasSaved)
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name); // Simply restart the scene
+            }
+            else
+            {
+                // Show exit without saving UI
+                infoDisplay.defaultUI.SetActive(false);
+                infoDisplay.exitNoSaveOptionsUI.SetActive(true);
+            }
+        });
+        infoDisplay.exitNoSave.onClick.AddListener(() =>
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name); // Simply restart the scene
+        });
+        infoDisplay.cancelExit.onClick.AddListener(() =>
+        {
+            infoDisplay.defaultUI.SetActive(true);
+            infoDisplay.exitNoSaveOptionsUI.SetActive(false);
+        });
+
         while (true)
         {
             UpdateDisplayInfo();
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(.2f);
         }
     }
 
     private void UpdateDisplayInfo()
     {
-        infoDisplay.title.text = recording.name;
-        infoDisplay.difficulty.text = recording.difficulty.ToString();
+        if (infoDisplay.title.text != recording.name)
+        {
+            infoDisplay.title.text = recording.name;
+        }
+
+        if (infoDisplay.difficulty.value != (int)recording.difficulty)
+        {
+            infoDisplay.difficulty.SetValueWithoutNotify((int)recording.difficulty);
+        }
+
         infoDisplay.pieces.text = recording.pieces.ToString();
-        infoDisplay.time.text = recording.time.ToString();
+
+        TimeSpan t = TimeSpan.FromSeconds(recording.time);
+
+        string answer = string.Format("{0:D2}h:{1:D2}m:{2:D2}s",
+                        t.Hours,
+                        t.Minutes,
+                        t.Seconds);
+
+        infoDisplay.time.text = answer;
     }
 
     /// <summary>
@@ -97,6 +187,9 @@ public class Recorder : MonoBehaviour
     /// <param name="play">Wether to play the current command.</param>
     public void AddCommand(Command c, bool play=false)
     {
+        hasSaved = false;
+        infoDisplay.save.interactable = true;
+
         // Clear the command history
         commandHistory.Clear();
 
@@ -123,6 +216,8 @@ public class Recorder : MonoBehaviour
         {
             PlayCommand(c);
         }
+        hasSaved = true;
+        infoDisplay.save.interactable = false;
     }
     
     public void PlayCommand(Command c)
@@ -155,6 +250,9 @@ public class Recorder : MonoBehaviour
 
     public void Undo()
     {
+        hasSaved = false;
+        infoDisplay.save.interactable = true;
+
         UndoInternal();
         UndoInternal();
     }
@@ -190,6 +288,9 @@ public class Recorder : MonoBehaviour
 
     public void Redo()
     {
+        hasSaved = false;
+        infoDisplay.save.interactable = true;
+
         RedoInternal();
         RedoInternal();
     }

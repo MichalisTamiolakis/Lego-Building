@@ -11,10 +11,10 @@ public class Recording
 {
     public enum Difficulty
     {
-        Easy,
-        Medium,
-        Hard,
-        VeryHard
+        Easy = 0,
+        Medium = 1,
+        Hard = 2,
+        VeryHard = 3
     }
 
     public Recording(string name)
@@ -48,7 +48,7 @@ public class Recording
         if(c.type == Command.CommandType.MoveBrick)
         {
             if(c.frames.Count > 0)
-                time += (uint)Mathf.RoundToInt(c.frames[c.frames.Count - 1].timestamp);
+                time += Convert.ToUInt32(Mathf.RoundToInt(c.frames[c.frames.Count - 1].timestamp));
         }
 
         commands.Add(c);
@@ -66,7 +66,7 @@ public class Recording
         if (c.type == Command.CommandType.MoveBrick)
         {
             if (c.frames.Count > 0)
-                time -= (uint)Mathf.RoundToInt(c.frames[c.frames.Count - 1].timestamp);
+                time -= Convert.ToUInt32(Mathf.RoundToInt(c.frames[c.frames.Count - 1].timestamp));
         }
 
         commands.RemoveAt(commandIndex);

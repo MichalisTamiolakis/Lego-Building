@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class DisplayModels : MonoBehaviour
 {
@@ -15,6 +15,7 @@ public class DisplayModels : MonoBehaviour
     public TMPro.TMP_Text time;
     public PhysicsGadgetButton nextModel;
     public PhysicsGadgetButton previousModel;
+    public Button loadButton;
 
 
     private Dictionary<int, GameObject> idToBrickGameObject = new Dictionary<int, GameObject>();
@@ -36,10 +37,12 @@ public class DisplayModels : MonoBehaviour
             nextModel.OnPressed.AddListener(ShowNext);
             previousModel.OnPressed.AddListener(ShowPrevious);
             DisplayModel(currentFileIndex);
+            loadButton.interactable = true;
         }
         else
         {
             Debug.LogError("No Recordings found.");
+            loadButton.interactable = false;
         }
     }
 
@@ -104,9 +107,10 @@ public class DisplayModels : MonoBehaviour
 
         TimeSpan t = TimeSpan.FromSeconds(recording.time);
 
-        string answer = string.Format("{0:D2}h:{1:D2}m",
-                        t.Hours,
-                        t.Minutes);
+        string answer = string.Format("{0:D2}h:{1:D2}m:{2:D2}s",
+                       t.Hours,
+                       t.Minutes,
+                       t.Seconds);
         time.text = answer;
     }
 

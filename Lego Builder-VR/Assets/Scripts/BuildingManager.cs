@@ -128,14 +128,6 @@ public class BuildingManager : MonoBehaviour
             }
             brick.transform.position = buildArea.transform.TransformPoint(pos);
             brick.transform.rotation = buildArea.transform.rotation * rot;
-            //if (brick.TryGetComponent(out DestroyOnRelease dor))
-            //{
-            //    dor.enabled = false;
-            //}
-            //if(brick.TryGetComponent(out Grabbable grabbable))
-            //{
-            //    grabbable.isGrabbable = false;
-            //}
 
             DestroyTransparentOfBrick(brick);
             actualToTransparent.Remove(brick);
@@ -273,7 +265,7 @@ public class BuildingManager : MonoBehaviour
         {
             int brickID = Recorder.Instance.GenerateBlockID();
             Recorder.Instance.AddCommand(Command.CreateRequireBrickCommand(brickID, brick), play: true);
-            Recorder.Instance.AddCommand(new Command(Command.CommandType.MoveBrick, brickID, br.frames), play: true);
+            Recorder.Instance.AddCommand(new Command(Command.CommandType.MoveBrick, brickID, new List<AnimationFrame>(br.frames)), play: true);
         }
     }
 

@@ -15,7 +15,6 @@ public class BrickRecordingTriggers:MonoBehaviour
 
         recorder.ClearRecording();
         recorder.StartRecordingTransform();
-        Debug.Log("Entered recording area");
     }
 
     public void OnTriggerExit(Collider other)
@@ -27,7 +26,6 @@ public class BrickRecordingTriggers:MonoBehaviour
 
         recorder.StopRecordingTransform();
         recorder.ClearRecording();
-        Debug.Log("Left recording area");
     }
 
     private void Reset()
